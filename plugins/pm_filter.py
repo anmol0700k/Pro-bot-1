@@ -30,7 +30,7 @@ BUTTONS = {}
 SPELL_CHECK = {}
 
 
-@Client.on_message(filters.text & filters.incoming)
+@Client.on_message(filters.text & ~filters.edited & filters.incoming)
 async def give_filter(client, message):
     k = await manual_filters(client, message)
     if k == False:
@@ -69,19 +69,15 @@ async def next_page(bot, query):
             ]
             for file in files
         ]
-    else:
-        btn = [
-            [
-                InlineKeyboardButton(
-                    text=f"{file.file_name}", callback_data=f'files#{file.file_id}'
-                ),
-                InlineKeyboardButton(
-                    text=f"{get_size(file.file_size)}",
-                    callback_data=f'files_#{file.file_id}',
-                ),
-            ]
-            for file in files
+        
+    btn.insert(0,
+        [
+            InlineKeyboardButton('❓ʜᴏᴡ', url='https://graph.org/𝙃𝙤𝙬-𝙏𝙤-𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙-𝘼𝙣𝙮-𝙈𝙤𝙫𝙞𝙚-𝙁𝙧𝙤𝙢-𝘾𝙖𝙥𝙩𝙖𝙞𝙣-𝘼𝙪𝙩𝙤𝙗𝙤𝙩-08-22'),
+            InlineKeyboardButton('🆘ꜱᴏꜱ', url='https://t.me/Anmol0700'),
+            InlineKeyboardButton('😈ɢʀᴏᴜᴘ', url='https://t.me/Movies_Samrajya'),
+            InlineKeyboardButton('🔗ʙᴀᴄᴋᴜᴘ', url='https://t.me/Pros_Movies_Empire'),
         ]
+    )
 
     if 0 < offset <= 10:
         off_set = 0
@@ -647,23 +643,18 @@ async def auto_filter(client, msg, spoll=False):
             ]
             for file in files
         ]
-    else:
-        btn = [
-            [
-                InlineKeyboardButton(
-                    text=f"{file.file_name}",
-                    callback_data=f'{pre}#{file.file_id}',
-                ),
-                InlineKeyboardButton(
-                    text=f"{get_size(file.file_size)}",
-                    callback_data=f'{pre}#{file.file_id}',
-                ),
-            ]
-            for file in files
+        
+    btn.insert(0,
+        [
+            InlineKeyboardButton('❓ʜᴏᴡ', url='https://graph.org/𝙃𝙤𝙬-𝙏𝙤-𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙-𝘼𝙣𝙮-𝙈𝙤𝙫𝙞𝙚-𝙁𝙧𝙤𝙢-𝘾𝙖𝙥𝙩𝙖𝙞𝙣-𝘼𝙪𝙩𝙤𝙗𝙤𝙩-08-22'),
+            InlineKeyboardButton('🆘ꜱᴏꜱ', url='https://t.me/Anmol0700'),
+            InlineKeyboardButton('😈ɢʀᴏᴜᴘ', url='https://t.me/Movies_Samrajya'),
+            InlineKeyboardButton('🔗ʙᴀᴄᴋᴜᴘ', url='https://t.me/Pros_Movies_Empire'),
         ]
+    )
 
     if offset != "":
-        key = f"{message.chat.id}-{message.id}"
+        key = f"{message.chat.id}-{message.message_id}"
         BUTTONS[key] = search
         req = message.from_user.id if message.from_user else 0
         btn.append(
@@ -709,22 +700,30 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"Here is what i found for your query {search}"
+        cap = f"<b><i>📽★彡ᴍᴏᴠɪᴇ ɴᴀᴍᴇ ➤ {search}\nʀᴇQ ʙʏ ➤ : {message.from_user.mention}\n📢 𝐍𝐨𝐭𝐞: ᴛʜɪꜱ ꜰɪʟᴛᴇʀ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ\nᴀꜰᴛᴇʀ 02 ʜᴏᴜʀ ᴛᴏ ʀᴇᴅᴜᴄᴇ ᴄᴏᴘʏʀɪɢʜᴛ ⏰</i></b>"
+
     if imdb and imdb.get('poster'):
         try:
-            await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
-                                      reply_markup=InlineKeyboardMarkup(btn))
+            hehe = await message.reply_photo(photo=imdb.get('poster'), caption=cap, reply_markup=InlineKeyboardMarkup(btn))
+            await asyncio.sleep(7200)
+            await hehe.delete()
+            await message.reply_text(text=f"⚙️ Fɪʟᴛᴇʀ Fᴏʀ {search} ʜᴀꜱ ʙᴇᴇɴ ᴅᴇʟᴇᴛᴇᴅ 🗑️")
         except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
             pic = imdb.get('poster')
             poster = pic.replace('.jpg', "._V1_UX360.jpg")
-            await message.reply_photo(photo=poster, caption=cap[:1024], reply_markup=InlineKeyboardMarkup(btn))
+            hmm = await message.reply_photo(photo=poster, caption=cap, reply_markup=InlineKeyboardMarkup(btn))
+            await asyncio.sleep(7200)
+            await hmm.edit_text(text=f"⚙️ Fɪʟᴛᴇʀ Fᴏʀ {search} ʜᴀꜱ ʙᴇᴇɴ ᴅᴇʟᴇᴛᴇᴅ 🗑️")
         except Exception as e:
             logger.exception(e)
-            await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
+            fek = await message.reply_photo(photo="https://telegra.ph/file/8820dba748d93b5bea63c.jpg", caption=cap, reply_markup=InlineKeyboardMarkup(btn))
+            await asyncio.sleep(7200)
+            await fek.edit_text(text=f"⚙️ Fɪʟᴛᴇʀ Fᴏʀ {search} ʜᴀꜱ ʙᴇᴇɴ ᴅᴇʟᴇᴛᴇᴅ 🗑️")
     else:
-        await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
-    if spoll:
-        await msg.message.delete()
+        fuk = await message.reply_photo(photo="https://telegra.ph/file/8820dba748d93b5bea63c.jpg", caption=cap, reply_markup=InlineKeyboardMarkup(btn))
+        await asyncio.sleep(7200)
+        await fuk.delete()
+        await message.reply_text(text=f"⚙️ Fɪʟᴛᴇʀ Fᴏʀ {search} ʜᴀꜱ ʙᴇᴇɴ ᴅᴇʟᴇᴛᴇᴅ 🗑️")
 
 
 async def advantage_spell_chok(msg):
@@ -769,7 +768,7 @@ async def advantage_spell_chok(msg):
         await asyncio.sleep(8)
         await k.delete()
         return
-    SPELL_CHECK[msg.id] = movielist
+    SPELL_CHECK[msg.message_id] = movielist
     btn = [[
         InlineKeyboardButton(
             text=movie.strip(),
@@ -784,7 +783,7 @@ async def advantage_spell_chok(msg):
 async def manual_filters(client, message, text=False):
     group_id = message.chat.id
     name = text or message.text
-    reply_id = message.reply_to_message.id if message.reply_to_message else message.id
+    reply_id = message.reply_to_message.message_id if message.reply_to_message else message.message_id
     keywords = await get_filters(group_id)
     for keyword in reversed(sorted(keywords, key=len)):
         pattern = r"( |^|[^\w])" + re.escape(keyword) + r"( |$|[^\w])"
